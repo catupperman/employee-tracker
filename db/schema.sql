@@ -8,12 +8,12 @@ CREATE TABLE department (
   name VARCHAR(30) NOT NULL
 );
 
-CREATE TABLE course_names (
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(30) NOT NULL,
-  department INT,
-  ON DELETE SET NULL
-);
+-- CREATE TABLE course_names (
+--   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+--   name VARCHAR(30) NOT NULL,
+--   department INT,
+--   ON DELETE SET NULL
+-- );
 
 CREATE TABLE role (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
