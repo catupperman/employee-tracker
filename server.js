@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
+const ascci = require("ascii-art")
 // connecting to sql files
 const db = mysql.createConnection(
     {
@@ -14,6 +15,13 @@ const db = mysql.createConnection(
 db.query('SELECT * FROM employee', function (err, results) {
     console.log(results);
 });
+
+try{
+    let rendered = await art.font("Employee Tracker", 'doom').completed()
+    //rendered is the ascii
+}catch(err){
+    //err is an error
+}
 //information to be entered in to the department table rows 
 function department() {
     inquirer.prompt([

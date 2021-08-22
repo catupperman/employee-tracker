@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ascii-art": "^2.8.5",
     "express": "^4.17.1",
     "inquirer": "^8.1.2",
     "mysql2": "^2.2.5"
