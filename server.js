@@ -12,9 +12,10 @@ const db = mysql.createConnection(
     console.log(`Connected to the employee_db database.`)
 );
 
-// db.query('SELECT * FROM employee', function (err, results) {
-//     console.log(results);
-// });
+db.query('SELECT * FROM employee', function (err, results) {
+    console.log(results);
+    mainMenu();
+});
 
 //art thingie for the top of the menu
 
@@ -131,4 +132,3 @@ function employee() {
     ])
 }
 
-mainMenu();
