@@ -16,12 +16,14 @@ const db = mysql.createConnection(
 //     console.log(results);
 // });
 
-try {
-    let rendered = await art.font("Employee Tracker", 'doom').completed()
-    //rendered is the ascii
-} catch (err) {
-    //err is an error
-}
+//art thingie for the top of the menu
+
+// try {
+//     let rendered = await art.font("Employee Tracker", 'doom').completed()
+//     //rendered is the ascii
+// } catch (err) {
+//     //err is an error
+// }
 
 function mainMenu() {
     inquirer.prompt([
