@@ -12,16 +12,54 @@ const db = mysql.createConnection(
     console.log(`Connected to the employee_db database.`)
 );
 
-db.query('SELECT * FROM employee', function (err, results) {
-    console.log(results);
-});
+// db.query('SELECT * FROM employee', function (err, results) {
+//     console.log(results);
+// });
 
-try{
+try {
     let rendered = await art.font("Employee Tracker", 'doom').completed()
     //rendered is the ascii
-}catch(err){
+} catch (err) {
     //err is an error
 }
+
+function mainMenu() {
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "What would you like to do? (Use Arrow Keys)",
+            name: "main-prompt",
+            choices: ["View All Employees", "Add Employee", "Update Employee Role", "View All Roles", "Add Role", "View All Departments", "Add a Department", "Quit"]
+        }
+    ]).then(answers => {
+        switch (answers.direction) {
+            case "View All Employees":
+                db.query('SELECT * FROM employee', function (err, results) {
+                    console.log(results);
+                });
+                break;
+            case "Add Employee":
+                employee(answers);
+                break;
+            case "Update Employee Role":
+                //not sure
+                break;
+            case "View All Roles":
+                role(answers);
+                break;
+            case "Add a Department":
+                department(answers);
+                break;
+            case "Quit":
+                return "quit";
+            default:
+                break;
+
+        }
+    })
+}
+
+
 //information to be entered in to the department table rows 
 function department() {
     inquirer.prompt([
@@ -63,7 +101,7 @@ function role() {
     ])
 }
 
-function employee(){
+function employee() {
     inquirer.prompt([
         {
             type: "input",
@@ -91,3 +129,4 @@ function employee(){
     ])
 }
 
+mainMenu();
