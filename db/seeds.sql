@@ -1,4 +1,5 @@
 USE employee_db;
+
 INSERT INTO department (name) VALUES ("sales"), ("accounting");
 
 INSERT INTO role (title, salary, department_id) VALUES ("salesman", 70000, 1), ("accountant", 80000, 2);

@@ -15,6 +15,7 @@ const db = mysql.createConnection(
 
 db.query = util.promisify(db.query);
 
+//makes the company table
 db.query('SELECT employee.id, CONCAT(employee.first_name," ", employee.last_name) AS employee, role.title, department.name AS department, role.salary FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id').then(dbres => {
     console.table(dbres);
     mainMenu();
@@ -28,7 +29,7 @@ db.query('SELECT employee.id, CONCAT(employee.first_name," ", employee.last_name
 // } catch (err) {
 //     //err is an error
 // }
-
+//starts the prompt
 function mainMenu() {
     inquirer.prompt([
         {
@@ -42,13 +43,13 @@ function mainMenu() {
             case "View Company":
 
             case "Add Employee":
-                employee(answer);
+                addEmployee(answer);
                 break;
             case "Add Employee Role":
-                //not sure
+                addRole();
                 break;
             case "View All Roles":
-                role();
+
                 break;
             case "Add a Department":
                 addDepartment();
@@ -63,7 +64,7 @@ function mainMenu() {
 }
 
 
-//information to be entered in to the department table rows 
+//adds a new department 
 function addDepartment() {
     inquirer.prompt([
         {
@@ -80,8 +81,8 @@ function addDepartment() {
         db.query("INSERT INTO department SET ?", { name: dbres.name })
     })
 }
-//information to be entered into the table rows for the course table
-function role() {
+//adds new role
+function addRole() {
     inquirer.prompt([
         {
             type: "input",
@@ -105,8 +106,8 @@ function role() {
         }
     ])
 }
-
-function employee() {
+//adds a new employee
+function addEmployee() {
     inquirer.prompt([
         {
             type: "input",
