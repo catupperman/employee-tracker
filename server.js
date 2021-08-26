@@ -47,13 +47,13 @@ function mainMenu() {
                 viewCompany();
                 break;
             case "Add Employee":
-                addEmployee();
+                addEmployee(choice);
                 break;
             case "View All Employees":
-                viewEmployees;
+                viewEmployees();
                 break;
             case "Add Role":
-                addRole();
+                addRole(choice);
                 break;
             case "View All Roles":
                 viewRoles();
@@ -109,10 +109,12 @@ function addEmployee() {
 };
 
 //views all the employees
-// const viewEmployees = db.query('SELECT employee.id, CONCAT(employee.first_name," ", employee.last_name) AS employee, department.name AS department').then(dbres => {
-//     console.table(dbres);
-//     mainMenu();
-// });
+function viewEmployees() {
+    db.query('SELECT employee.id, CONCAT(employee.first_name," ", employee.last_name) AS employee, department.name AS department').then(employeeDBres => {
+        console.table(employeeDBres);
+        mainMenu();
+    })
+};
 
 //adds new role
 function addRole() {
@@ -164,12 +166,12 @@ function addDepartment() {
             name: "department_name"
         }
     ])
-    //.then(departmentdbres => {
-    //     db.query("INSERT INTO department SET ?", { department_id: departmentdbres.department_id, department_name: departmentdbres.department_name }).then(dbres => {
-    //         console.table(departmentdbres);
-    //         mainMenu();
-    //     });
-    //})
+    .then(departmentdbres => {
+         db.query("INSERT INTO department SET ?", { department_id: departmentdbres.department_id, department_name: departmentdbres.department_name }).then(departmentdbres => {
+            console.table(departmentdbres);
+         mainMenu();
+         });
+    })
 }
 //views all the departments
 // const viewEmployees = db.query('SELECT employee.id, CONCAT(employee.first_name," ", employee.last_name) AS employee, department.name AS department').then(dbres => {
