@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-const ascci = require("ascii-art")
+const ascci = require("ascii-art");
+const util = require('util')
 // connecting to sql files
 const db = mysql.createConnection(
     {
@@ -12,8 +13,10 @@ const db = mysql.createConnection(
     console.log(`Connected to the employee_db database.`)
 );
 
-db.query('SELECT * FROM employee', function (err, results) {
-    console.log(results);
+db.query = util.promisify(db.query);
+
+db.query('SELECT employee.id, CONCAT(employee.first_name," ", employee.last_name) AS employee, role.title, department.name AS department, role.salary FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id').then(dbres => {
+    console.table(dbres);
     mainMenu();
 });
 
@@ -32,26 +35,23 @@ function mainMenu() {
             type: "list",
             message: "What would you like to do? (Use Arrow Keys)",
             name: "main-prompt",
-            choices: ["View All Employees", "Add Employee", "Update Employee Role", "View All Roles", "Add Role", "View All Departments", "Add a Department", "Quit"]
+            choices: ["View Company", "Add Employee", "View Employee", "Add Employee Role", "View All Roles", "Add Role", "View All Departments", "Add a Department", "Quit"]
         }
-    ]).then(answers => {
-        switch (answers.direction) {
-            case "View All Employees":
-                db.query('SELECT * FROM employee', function (err, results) {
-                    console.log(results);
-                });
-                break;
+    ]).then(answer => {
+        switch (answer.direction) {
+            case "View Company":
+
             case "Add Employee":
-                employee(answers);
+                employee(answer);
                 break;
-            case "Update Employee Role":
+            case "Add Employee Role":
                 //not sure
                 break;
             case "View All Roles":
-                role(answers);
+                role();
                 break;
             case "Add a Department":
-                department(answers);
+                addDepartment();
                 break;
             case "Quit":
                 return "quit";
@@ -64,7 +64,7 @@ function mainMenu() {
 
 
 //information to be entered in to the department table rows 
-function department() {
+function addDepartment() {
     inquirer.prompt([
         {
             type: "input",
@@ -76,7 +76,9 @@ function department() {
             message: "What is the department name?",
             name: "department_name"
         }
-    ])
+    ]).then(dbres => {
+        db.query("INSERT INTO department SET ?", { name: dbres.name })
+    })
 }
 //information to be entered into the table rows for the course table
 function role() {
