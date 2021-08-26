@@ -16,7 +16,7 @@ const db = mysql.createConnection(
 db.query = util.promisify(db.query);
 
 //makes the company table
-db.query('SELECT employee.id, CONCAT(employee.first_name," ", employee.last_name) AS employee, role.title, department.name AS department, role.salary FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id').then(dbres => {
+const viewCompany = db.query('SELECT employee.id, CONCAT(employee.first_name," ", employee.last_name) AS employee, role.title, department.name AS department, role.salary FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id').then(dbres => {
     console.table(dbres);
     mainMenu();
 });
@@ -35,24 +35,31 @@ function mainMenu() {
         {
             type: "list",
             message: "What would you like to do? (Use Arrow Keys)",
-            name: "main-prompt",
-            choices: ["View Company", "Add Employee", "View Employee", "Add Employee Role", "View All Roles", "Add Role", "View All Departments", "Add a Department", "Quit"]
+            name: "main_prompt",
+            choices: ["View Company", "Add Employee", "View All Employees", "Add Role", "View All Roles", "Add a Department", "View All Departments", "Quit"]
         }
-    ]).then(answer => {
-        switch (answer.direction) {
+    ]).then(choice => {
+        switch (choice.main_prompt) {
             case "View Company":
-
-            case "Add Employee":
-                addEmployee(answer);
+                viewCompany;
                 break;
-            case "Add Employee Role":
+            case "Add Employee":
+                addEmployee();
+                break;
+            case "View All Employees":
+                viewEmployees;
+                break;
+            case "Add Role":
                 addRole();
                 break;
             case "View All Roles":
-
+                viewRoles();
                 break;
             case "Add a Department":
-                addDepartment();
+                addDepartment(choice);
+                break;
+            case "View All Departments":
+                viewDepartments();
                 break;
             case "Quit":
                 return "quit";
@@ -64,48 +71,6 @@ function mainMenu() {
 }
 
 
-//adds a new department 
-function addDepartment() {
-    inquirer.prompt([
-        {
-            type: "input",
-            message: "What is the department id number?",
-            name: "department_id"
-        },
-        {
-            type: "input",
-            message: "What is the department name?",
-            name: "department_name"
-        }
-    ]).then(dbres => {
-        db.query("INSERT INTO department SET ?", { name: dbres.name })
-    })
-}
-//adds new role
-function addRole() {
-    inquirer.prompt([
-        {
-            type: "input",
-            message: "What is the role id number?",
-            name: "course_id"
-        },
-        {
-            type: "input",
-            message: "What is the role name?",
-            name: "role_name"
-        },
-        {
-            type: "input",
-            message: "What is the role salary?",
-            name: "role_salary"
-        },
-        {//validate function inside of here? to sync to department_id (if (user reponse === deparment_id) return "this is a valid department" else return "Please enter a valid department number"
-            type: "",
-            message: "What is the role, department_id number?",
-            name: "role_department_id"
-        }
-    ])
-}
 //adds a new employee
 function addEmployee() {
     inquirer.prompt([
@@ -131,6 +96,57 @@ function addEmployee() {
         },
         {//if employee role is manager prompt for manager id should this be a list type?
             type: ""
+        }
+    ])
+};
+//views all the employees
+// const viewEmployees = db.query('SELECT employee.id, CONCAT(employee.first_name," ", employee.last_name) AS employee, department.name AS department').then(dbres => {
+//     console.table(dbres);
+//     mainMenu();
+// });
+//adds a new department 
+function addDepartment() {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "What is the department id number?",
+            name: "department_id"
+        },
+        {
+            type: "input",
+            message: "What is the department name?",
+            name: "department_name"
+        }
+     ])
+    //.then(dbres => {
+    //     db.query("INSERT INTO department SET ?", { name: dbres.name }).then(dbres => {
+    //         console.table(dbres);
+    //         mainMenu();
+    //     });
+    //})
+}
+//adds new role
+function addRole() {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "What is the role id number?",
+            name: "course_id"
+        },
+        {
+            type: "input",
+            message: "What is the role name?",
+            name: "role_name"
+        },
+        {
+            type: "input",
+            message: "What is the role salary?",
+            name: "role_salary"
+        },
+        {//validate function inside of here? to sync to department_id (if (user reponse === deparment_id) return "this is a valid department" else return "Please enter a valid department number"
+            type: "",
+            message: "What is the role, department_id number?",
+            name: "role_department_id"
         }
     ])
 }
