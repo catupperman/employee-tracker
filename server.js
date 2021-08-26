@@ -16,11 +16,14 @@ const db = mysql.createConnection(
 db.query = util.promisify(db.query);
 
 //makes the company table
-const viewCompany = db.query('SELECT employee.id, CONCAT(employee.first_name," ", employee.last_name) AS employee, role.title, department.name AS department, role.salary FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id').then(dbres => {
-    console.table(dbres);
-    mainMenu();
-});
+function viewCompany() {
+    db.query('SELECT employee.id, CONCAT(employee.first_name," ", employee.last_name) AS employee, role.title, department.name AS department, role.salary FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id').then(dbres => {
+        console.table(dbres);
+        mainMenu();
+    });
+}
 
+mainMenu();
 //art thingie for the top of the menu
 
 // try {
@@ -41,7 +44,7 @@ function mainMenu() {
     ]).then(choice => {
         switch (choice.main_prompt) {
             case "View Company":
-                viewCompany;
+                viewCompany();
                 break;
             case "Add Employee":
                 addEmployee();
@@ -62,7 +65,7 @@ function mainMenu() {
                 viewDepartments();
                 break;
             case "Quit":
-                return "quit";
+                return console.log("To quit, hit command C on your keyboard, and have a wonderful day!");
             default:
                 break;
 
@@ -97,34 +100,20 @@ function addEmployee() {
         {//if employee role is manager prompt for manager id should this be a list type?
             type: ""
         }
-    ])
+    ])//.then(departmentdbres => {
+    //     db.query("INSERT INTO department SET ?", { department_id: departmentdbres.department_id, department_name: departmentdbres.department_name }).then(departmentdbres => {
+    //         console.table(departmentdbres);
+    //         mainMenu();
+    //     });
+    //})
 };
+
 //views all the employees
 // const viewEmployees = db.query('SELECT employee.id, CONCAT(employee.first_name," ", employee.last_name) AS employee, department.name AS department').then(dbres => {
 //     console.table(dbres);
 //     mainMenu();
 // });
-//adds a new department 
-function addDepartment() {
-    inquirer.prompt([
-        {
-            type: "input",
-            message: "What is the department id number?",
-            name: "department_id"
-        },
-        {
-            type: "input",
-            message: "What is the department name?",
-            name: "department_name"
-        }
-     ])
-    //.then(dbres => {
-    //     db.query("INSERT INTO department SET ?", { name: dbres.name }).then(dbres => {
-    //         console.table(dbres);
-    //         mainMenu();
-    //     });
-    //})
-}
+
 //adds new role
 function addRole() {
     inquirer.prompt([
@@ -148,6 +137,42 @@ function addRole() {
             message: "What is the role, department_id number?",
             name: "role_department_id"
         }
-    ])
+    ]).then(roleDBres => {
+        db.query("INSERT INTO department SET ?", { department_id: roleDBres.department_id, department_name: roleDBres.department_name }).then(roledbres => {
+            console.table(roledbres);
+            mainMenu();
+        });
+    })
 }
+//views all the roles
+// const viewEmployees = db.query('SELECT employee.id, CONCAT(employee.first_name," ", employee.last_name) AS employee, department.name AS department').then(dbres => {
+//     console.table(dbres);
+//     mainMenu();
+// });
 
+//adds a new department 
+function addDepartment() {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "What is the department id number?",
+            name: "department_id"
+        },
+        {
+            type: "input",
+            message: "What is the department name?",
+            name: "department_name"
+        }
+    ])
+    //.then(departmentdbres => {
+    //     db.query("INSERT INTO department SET ?", { department_id: departmentdbres.department_id, department_name: departmentdbres.department_name }).then(dbres => {
+    //         console.table(departmentdbres);
+    //         mainMenu();
+    //     });
+    //})
+}
+//views all the departments
+// const viewEmployees = db.query('SELECT employee.id, CONCAT(employee.first_name," ", employee.last_name) AS employee, department.name AS department').then(dbres => {
+//     console.table(dbres);
+//     mainMenu();
+// });
