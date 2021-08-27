@@ -50,19 +50,19 @@ function mainMenu() {
                 addEmployee(choice);
                 break;
             case "View All Employees":
-                viewEmployees();
+                viewEmployees(choice);
                 break;
             case "Add Role":
                 addRole(choice);
                 break;
             case "View All Roles":
-                viewRoles();
+                viewRoles(choice);
                 break;
             case "Add a Department":
                 addDepartment(choice);
                 break;
             case "View All Departments":
-                viewDepartments();
+                viewDepartments(choice);
                 break;
             case "Quit":
                 return console.log("To quit, hit command C on your keyboard, and have a wonderful day!");
@@ -97,20 +97,20 @@ function addEmployee() {
             message: "What is the employee's role id?",
             name: "employee_role"
         },
-        {//if employee role is manager prompt for manager id should this be a list type?
-            type: ""
-        }
-    ])//.then(departmentdbres => {
-    //     db.query("INSERT INTO department SET ?", { department_id: departmentdbres.department_id, department_name: departmentdbres.department_name }).then(departmentdbres => {
-    //         console.table(departmentdbres);
-    //         mainMenu();
-    //     });
-    //})
+        // {//if employee role is manager prompt for manager id should this be a list type?
+        //     type: ""
+        // }
+    ]).then(employeedbres => {
+         db.query("INSERT INTO employee SET ?", { role_id: employeedbres.role_id, first_name: employeedbres.employee_first_name, last_name: employeedbres.employee_last_name, role_id: employeedbres.employee_role}).then(employeedbres => {
+            console.table(employeedbres);
+            mainMenu();
+        });
+    })
 };
 
 //views all the employees
 function viewEmployees() {
-    db.query('SELECT employee.id, CONCAT(employee.first_name," ", employee.last_name) AS employee, department.name AS department').then(employeeDBres => {
+    db.query('SELECT employee.id, CONCAT(employee.first_name," ", employee.last_name) AS employee FROM employee').then(employeeDBres => {
         console.table(employeeDBres);
         mainMenu();
     })
