@@ -93,13 +93,14 @@ function addEmployee() {
             name: "employee_role"
         },
         {
-            type: "input",
-            message: "What is the Manager Id?",
-            name: "manager_id"
+            type: "list",
+            message: "What is the reporting Manager Id?",
+            name: "manager_id",
+            choices: managers()
         }
 
     ]).then((answer) => {
-        db.query("INSERT INTO employee SET ?", { employee_first_name: answer.first_name, employee_last_name: answer.last_name, employee_role: answer.role_id, manager_id: answer.employee_manager_id }).then((res, err) => {
+        db.query("INSERT INTO employee SET ?", { first_name: answer.employee_first_name, last_name: answer.employee_last_name, role_id: employee_role, employee_manager_id: answer.manager_id }).then((res, err) => {
             if (err) {
                 console.log(err);
             };
@@ -107,6 +108,31 @@ function addEmployee() {
         });
     })
 };
+//selects from the roles list from role table
+let roleArr = [];
+function roles() {
+  db.query("SELECT * FROM role", function(err, res) {
+    if (err) throw err
+    for (var i = 0; i < res.length; i++) {
+      roleArr.push(res[i].title);
+    }
+
+  })
+  return roleArr;
+}
+
+//puts managers into an array to choose from
+let managerArr = [];
+function managers() {
+  db.query("SELECT first_name, last_name FROM employee WHERE manager_id IS NULL", function(err, res) {
+    if (err) throw err
+    for (var i = 0; i < res.length; i++) {
+      managerArr.push(res[i].first_name);
+    }
+
+  })
+  return managerArr;
+}
 
 //views all the employees
 function viewEmployees() {
@@ -135,7 +161,7 @@ function addRole() {
             name: "role_salary"
         }
     ]).then((answer) => {
-        db.query("INSERT INTO role SET ?", { department_id: answer.department_id, title: answer.role_name, salary: answer.role_salary }, function (err, res) {
+        db.query("INSERT INTO role SET ?", { department_id: department_id, title: answer.role_name, salary: answer.role_salary }, function (err, res) {
             if (err) {
                 console.log(err)
             }
