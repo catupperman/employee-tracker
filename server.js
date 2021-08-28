@@ -62,7 +62,7 @@ function mainMenu() {
                 addDepartment(choice);
                 break;
             case "View All Departments":
-                viewDepartments(choice);
+                viewDep(choice);
                 break;
             case "Quit":
                 return console.log("To quit, hit command C on your keyboard, and have a wonderful day!");
@@ -79,11 +79,6 @@ function addEmployee() {
     inquirer.prompt([
         {
             type: "input",
-            message: "What is the employee id?",
-            name: "role_id"
-        },
-        {
-            type: "input",
             message: "What is the employee's first name?",
             name: "employee_first_name"
         },
@@ -97,12 +92,17 @@ function addEmployee() {
             message: "What is the employee's role id?",
             name: "employee_role"
         },
-        // {//if employee role is manager prompt for manager id should this be a list type?
-        //     type: ""
-        // }
-    ]).then(employeedbres => {
-         db.query("INSERT INTO employee SET ?", { role_id: employeedbres.role_id, first_name: employeedbres.employee_first_name, last_name: employeedbres.employee_last_name, role_id: employeedbres.employee_role}).then(employeedbres => {
-            console.table(employeedbres);
+        {
+            type: "input",
+            message: "What is the Manager Id?",
+            name: "manager_id"
+        }
+
+    ]).then((answer) => {
+        db.query("INSERT INTO employee SET ?", { employee_first_name: answer.first_name, employee_last_name: answer.last_name, employee_role: answer.role_id, manager_id: answer.employee_manager_id }).then((res, err) => {
+            if (err) {
+                console.log(err);
+            };
             mainMenu();
         });
     })
@@ -121,8 +121,8 @@ function addRole() {
     inquirer.prompt([
         {
             type: "input",
-            message: "What is the role id number?",
-            name: "course_id"
+            message: "What is the department id number?",
+            name: "department_id"
         },
         {
             type: "input",
@@ -133,48 +133,47 @@ function addRole() {
             type: "input",
             message: "What is the role salary?",
             name: "role_salary"
-        },
-        {//validate function inside of here? to sync to department_id (if (user reponse === deparment_id) return "this is a valid department" else return "Please enter a valid department number"
-            type: "",
-            message: "What is the role, department_id number?",
-            name: "role_department_id"
         }
-    ]).then(roleDBres => {
-        db.query("INSERT INTO department SET ?", { department_id: roleDBres.department_id, department_name: roleDBres.department_name }).then(roledbres => {
-            console.table(roledbres);
-            mainMenu();
+    ]).then((answer) => {
+        db.query("INSERT INTO role SET ?", { department_id: answer.department_id, title: answer.role_name, salary: answer.role_salary }, function (err, res) {
+            if (err) {
+                console.log(err)
+            }
         });
-    })
-}
+
+        mainMenu();
+    });
+};
 //views all the roles
-// const viewEmployees = db.query('SELECT employee.id, CONCAT(employee.first_name," ", employee.last_name) AS employee, department.name AS department').then(dbres => {
-//     console.table(dbres);
-//     mainMenu();
-// });
+function viewRoles() {
+    db.query('SELECT * FROM role').then(employeeDBres => {
+        console.table(employeeDBres);
+        mainMenu();
+    })
+};
 
 //adds a new department 
 function addDepartment() {
     inquirer.prompt([
         {
             type: "input",
-            message: "What is the department id number?",
-            name: "department_id"
-        },
-        {
-            type: "input",
             message: "What is the department name?",
             name: "department_name"
         }
     ])
-    .then(departmentdbres => {
-         db.query("INSERT INTO department SET ?", { department_id: departmentdbres.department_id, department_name: departmentdbres.department_name }).then(departmentdbres => {
-            console.table(departmentdbres);
-         mainMenu();
-         });
-    })
+        .then((answer) => {
+            db.query("INSERT INTO department SET ? WHERE ?", { department_name: answer.department_name }).then((err, res) => {
+                if (err) {
+                    console.log(err);
+                };
+                mainMenu();
+            });
+        })
 }
 //views all the departments
-// const viewEmployees = db.query('SELECT employee.id, CONCAT(employee.first_name," ", employee.last_name) AS employee, department.name AS department').then(dbres => {
-//     console.table(dbres);
-//     mainMenu();
-// });
+function viewDep() {
+    db.query('SELECT * FROM department').then(employeeDBres => {
+        console.table(employeeDBres);
+        mainMenu();
+    })
+};
