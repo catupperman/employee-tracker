@@ -88,19 +88,22 @@ function addEmployee() {
             name: "employee_last_name"
         },
         {
-            type: "input",
-            message: "What is the employee's role id?",
-            name: "employee_role"
+            type: "list",
+            message: "What is the employee's role?",
+            name: "employee_role",
+            choices: roles()
         },
         {
             type: "list",
-            message: "What is the reporting Manager Id?",
+            message: "Who is the employees reporting Manager?",
             name: "manager_id",
             choices: managers()
         }
 
     ]).then((answer) => {
-        db.query("INSERT INTO employee SET ?", { first_name: answer.employee_first_name, last_name: answer.employee_last_name, role_id: employee_role, employee_manager_id: answer.manager_id }).then((res, err) => {
+        let role = roles().indexOf(answer.employee_role) + 1
+        let manager = managers().indexOf(answer.list) + 1
+        db.query("INSERT INTO employee SET ?", { first_name: answer.employee_first_name, last_name: answer.employee_last_name, role_id: role, employee_manager_id: manager }).then((res, err) => {
             if (err) {
                 console.log(err);
             };
@@ -111,27 +114,27 @@ function addEmployee() {
 //selects from the roles list from role table
 let roleArr = [];
 function roles() {
-  db.query("SELECT * FROM role", function(err, res) {
-    if (err) throw err
-    for (var i = 0; i < res.length; i++) {
-      roleArr.push(res[i].title);
-    }
+    db.query("SELECT title FROM role", function (err, res) {
+        if (err) throw err
+        for (var i = 0; i < res.length; i++) {
+            roleArr.push(res[i].title);
+        }
 
-  })
-  return roleArr;
+    })
+    return roleArr;
 }
 
 //puts managers into an array to choose from
 let managerArr = [];
 function managers() {
-  db.query("SELECT first_name, last_name FROM employee WHERE manager_id IS NULL", function(err, res) {
-    if (err) throw err
-    for (var i = 0; i < res.length; i++) {
-      managerArr.push(res[i].first_name);
-    }
+    db.query("SELECT first_name FROM employee WHERE employee_manager_id IS NOT NULL", function (err, res) {
+        if (err) throw err
+        for (var i = 0; i < res.length; i++) {
+            managerArr.push(res[i].first_name);
+        }
 
-  })
-  return managerArr;
+    })
+    return managerArr;
 }
 
 //views all the employees
@@ -147,11 +150,6 @@ function addRole() {
     inquirer.prompt([
         {
             type: "input",
-            message: "What is the department id number?",
-            name: "department_id"
-        },
-        {
-            type: "input",
             message: "What is the role name?",
             name: "role_name"
         },
@@ -161,7 +159,7 @@ function addRole() {
             name: "role_salary"
         }
     ]).then((answer) => {
-        db.query("INSERT INTO role SET ?", { department_id: department_id, title: answer.role_name, salary: answer.role_salary }, function (err, res) {
+        db.query("INSERT INTO role SET ?", { title: answer.role_name, salary: answer.role_salary }, function (err, res) {
             if (err) {
                 console.log(err)
             }
@@ -188,7 +186,7 @@ function addDepartment() {
         }
     ])
         .then((answer) => {
-            db.query("INSERT INTO department SET ? WHERE ?", { department_name: answer.department_name }).then((err, res) => {
+            db.query("INSERT INTO department SET ?", { name: answer.department_name }).then((err, res) => {
                 if (err) {
                     console.log(err);
                 };
