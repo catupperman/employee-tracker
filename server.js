@@ -103,7 +103,7 @@ function addEmployee() {
     ]).then((answer) => {
         let role = roles().indexOf(answer.employee_role) + 1
         let manager = managers().indexOf(answer.list) + 1
-        db.query("INSERT INTO employee SET ?", { first_name: answer.employee_first_name, last_name: answer.employee_last_name, role_id: role, employee_manager_id: manager }).then((res, err) => {
+        db.query("INSERT INTO employee SET ?", { first_name: answer.employee_first_name, last_name: answer.employee_last_name, role_id: role}).then((res, err) => {
             if (err) {
                 console.log(err);
             };
