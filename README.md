@@ -22,7 +22,7 @@
 > * [Shields IO](https://shields.io/category/license) 
 > * [Open Source Initiative](https://opensource.org/licenses/BSD-3-Clause) 
 ## Contributions
-> I would like to thank my tutor Corey Yates for her help with this assignment, and helping to set up table with the ```LEFT JOIN``` method in mySQL.  
+> I would like to thank my tutor Corey Yates for her help with this assignment, and helping to set up table with the ```LEFT JOIN``` method in mySQL.  I would also like to thank my student success manager for understanding that family matters can sometimes mess with deadlines, and granted me a 48 hour extension. 
 ## Testing
 > Testing was done by installing (and logging into) mySQL to make sure the sources were being pulled.  mySQL can be picky, so it is very important to get the syntax correct.  Once mySQL was working, I then tested through node to make sure each piece of the JavaScript was working.  ```node server.js```
 >![Test]()
