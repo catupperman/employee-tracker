@@ -11,7 +11,7 @@
 
 ## Description
 > This project was taking node, and mySQL, to create an employee database accessible through the terminal. The tables that will show within the terminal need to have several row and connections.  Rows would include employees, their titles, department, and salary.  
-[Video]()
+[Video](https://drive.google.com/file/d/1D8-vs-4FcsoUn3HRdWIrnYmvEeKH78a4/view)
 
 ## Installation
 > I pulled the [npm](https://www.npmjs.com/) package, aka ```package.json```, entered ```npm install``` , and then used the ```require``` method to narrow down to the [inquirer](https://www.npmjs.com/package/inquirer) package.  I also insalled the ```mysql2``` package in order to connect my JavaScript to the mySQL.  
@@ -25,7 +25,7 @@
 > I would like to thank my tutor Corey Yates for her help with this assignment, and helping to set up table with the ```LEFT JOIN``` method in mySQL.  I would also like to thank my student success manager for understanding that family matters can sometimes mess with deadlines, and granted me a 48 hour extension. 
 ## Testing
 > Testing was done by installing (and logging into) mySQL to make sure the sources were being pulled.  mySQL can be picky, so it is very important to get the syntax correct.  Once mySQL was working, I then tested through node to make sure each piece of the JavaScript was working.  ```node server.js```
->![Test]()
+>![Test](images/employee-tracker.gif)
 ## License
 ![BSD](https://img.shields.io/badge/License-GPL-blue)
 Copyright (C) 2021 catupperman
