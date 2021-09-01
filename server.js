@@ -75,7 +75,17 @@ function mainMenu() {
 
 
 //adds a new employee
-function addEmployee() {
+async function addEmployee() {
+    const roles = await db.query('SELECT * FROM role');
+const roleArr = roles.map(({id, title}) => ({
+    name: title, 
+    value: id,
+}))
+const employees = await db.query('SELECT * FROM employee')
+const empArr = employees.map(({id, first_name, last_name}) => ({
+    name: first_name + " " + last_name, 
+    value: id,
+}))
     inquirer.prompt([
         {
             type: "input",
@@ -91,19 +101,20 @@ function addEmployee() {
             type: "list",
             message: "What is the employee's role?",
             name: "employee_role",
-            choices: roles()
+            choices: roleArr
         },
         {
             type: "list",
             message: "Who is the employees reporting Manager?",
             name: "manager_id",
-            choices: managers()
+            choices: empArr
         }
 
     ]).then((answer) => {
-        let role = roles().indexOf(answer.employee_role) + 1
-        let manager = managers().indexOf(answer.list) + 1
-        db.query("INSERT INTO employee SET ?", { first_name: answer.employee_first_name, last_name: answer.employee_last_name, role_id: role, employee_manager_id: manager}).then((res, err) => {
+        // let role = roles().indexOf(answer.employee_role) + 1
+        // console.log(role);
+        //let manager = managers().indexOf(answer.list) + 1
+        db.query("INSERT INTO employee SET ?", { first_name: answer.employee_first_name, last_name: answer.employee_last_name, role_id: answer.employee_role, employee_manager_id: answer.manager_id}).then((res, err) => {
             if (err) {
                 console.log(err);
             };
