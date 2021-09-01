@@ -111,9 +111,6 @@ const empArr = employees.map(({id, first_name, last_name}) => ({
         }
 
     ]).then((answer) => {
-        // let role = roles().indexOf(answer.employee_role) + 1
-        // console.log(role);
-        //let manager = managers().indexOf(answer.list) + 1
         db.query("INSERT INTO employee SET ?", { first_name: answer.employee_first_name, last_name: answer.employee_last_name, role_id: answer.employee_role, employee_manager_id: answer.manager_id}).then((res, err) => {
             if (err) {
                 console.log(err);
@@ -122,31 +119,7 @@ const empArr = employees.map(({id, first_name, last_name}) => ({
         });
     })
 };
-//selects from the roles list from role table
-let roleArr = [];
-function roles() {
-    db.query("SELECT title FROM role", function (err, res) {
-        if (err) throw err
-        for (var i = 0; i < res.length; i++) {
-            roleArr.push(res[i].title);
-        }
 
-    })
-    return roleArr;
-}
-
-//puts managers into an array to choose from
-let managerArr = [];
-function managers() {
-    db.query("SELECT first_name FROM employee WHERE employee_manager_id IS NOT NULL", function (err, res) {
-        if (err) throw err
-        for (var i = 0; i < res.length; i++) {
-            managerArr.push(res[i].first_name);
-        }
-
-    })
-    return managerArr;
-}
 
 //views all the employees
 function viewEmployees() {
